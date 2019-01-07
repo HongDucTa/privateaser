@@ -200,6 +200,10 @@ function generateBookingPrice()
       }
     }
     events[i].price = price;
+    var commission = 0.3*price;
+    events[i].commission.insurance = commission*0.5;
+    events[i].commission.treasury = events[i].persons;
+    events[i].commission.privateaser = commission - commission*0.5 - events[i].persons;
   }
 }
 
