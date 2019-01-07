@@ -164,6 +164,23 @@ function fetchBarById(id)
   return result;
 }
 
+function fetchEventById(id)
+{
+  let eventFound = false;
+  let i = 0;
+  var result = null;
+  while (eventFound===false && i<events.length)
+  {
+    if (id===events[i].id)
+    {
+      eventFound = true;
+      result = events[i];
+    }
+    i = i + 1;
+  }
+  return result;
+}
+
 function generateBookingPrice()
 {
   for (var i=0;i<events.length;i++)
@@ -216,5 +233,74 @@ function generateBookingPrice()
   }
 }
 
+function payActors()
+{
+  for (var i=0;i<actors.length;i++)
+  {
+    var evnt = fetchEventById(actors[i].eventId);
+    if (evnt != null)
+    {
+      for (var j=0;j<actors[i].payment.length;j++)
+      {
+        /*
+        if (actors[i].payment[j].who === 'booker')
+        {
+          actors[i].payment[j].amount = evnt.price;
+        }
+        if (actors[i].payment[j].who === 'bar')
+        {
+          actors[i].payment[j].amount = evnt.price - evnt.price*0.3;
+        }
+        if (actors[i].payment[j].who === 'insurance')
+        {
+          actors[i].payment[j].amount = evnt.commission.insurance;
+        }
+        if (actors[i].payment[j].who === 'treasury')
+        {
+
+        }
+        */
+        switch (actors[i].payment[j].who)
+        {
+          case 'booker':
+          {
+            actors[i].payment[j].amount = evnt.price;
+            break;
+          }
+          case 'bar':
+          {
+            if (evnt.options.deductibleReduction === true)
+            {
+              actors[i].payment[j].amount = evnt.price - 200 - evnt.persons - (evnt.price - 200 - evnt.persons)*0.3;
+            }
+            else
+            {
+              actors[i].payment[j].amount = evnt.price - 5000 - (evnt.price - 5000)*0.3;
+            }
+            break;
+          }
+          case 'insurance':
+          {
+            actors[i].payment[j].amount = evnt.commission.insurance;
+            break;
+          }
+          case 'treasury':
+          {
+            actors[i].payment[j].amount = evnt.commission.treasury;
+            break;
+          }
+          case 'privateaser':
+          {
+            actors[i].payment[j].amount = evnt.commission.privateaser;
+            break;
+          }
+        }
+      }
+    }
+  }
+}
+
 generateBookingPrice();
+payActors();
 console.log(events);
+console.log(actors);
