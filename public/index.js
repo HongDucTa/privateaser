@@ -61,6 +61,7 @@ const events = [{
   'booker': 'otacos',
   'barId': '6e06c9c0-4ab0-4d66-8325-c5fa60187cf8',
   'distance': 5,
+  'time' : 5,
   'persons': 80,
   'options': {
     'deductibleReduction': true
@@ -146,10 +147,6 @@ const actors = [{
   }]
 }];
 
-console.log(bars);
-console.log(events);
-console.log(actors);
-
 function fetchBarById(id)
 {
   let barFound = false;
@@ -174,10 +171,37 @@ function generateBookingPrice()
     let bar = fetchBarById(events[i].barId);
     if (bar != null)
     {
-      events[i].price = events[i].time*bar.pricePerHour + events[i].persons*bar.pricePerPerson;
+      var price = 0;
+      //events[i].price = events[i].time*bar.pricePerHour + events[i].persons*bar.pricePerPerson;
+      for (var j=1;j<=events[i].time;j++)
+      {
+        if (j >= 60)
+        {
+          price = price + bar.pricePerHour - bar.pricePerHour*0.5;
+        }
+        else
+        {
+          if (j >= 20)
+          {
+            price = price + bar.pricePerHour - bar.pricePerHour*0.3;
+          }
+          else
+          {
+            if (j >= 10)
+            {
+              price = price + bar.pricePerHour - bar.pricePerHour*0.1;
+            }
+            else
+            {
+              price = price + bar.pricePerHour;
+            }
+          }
+        }
+      }
     }
+    events[i].price = price;
   }
 }
 
 generateBookingPrice();
-console.log(events)
+console.log(events);
