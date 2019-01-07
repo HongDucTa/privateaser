@@ -152,9 +152,9 @@ function fetchBarById(id)
   let barFound = false;
   let i = 0;
   var result = null;
-  while (barFound==false && i<bars.length)
+  while (barFound===false && i<bars.length)
   {
-    if (id==bars[i].id)
+    if (id===bars[i].id)
     {
       barFound = true;
       result = bars[i];
@@ -198,12 +198,21 @@ function generateBookingPrice()
           }
         }
       }
+      var deductible = 0;
+      if (events[i].options.deductibleReduction===true)
+      {
+        deductible = 200 + events[i].persons;
+      }
+      else
+      {
+        deductible = 5000;
+      }
     }
-    events[i].price = price;
+    events[i].price = price + deductible;
     var commission = 0.3*price;
     events[i].commission.insurance = commission*0.5;
     events[i].commission.treasury = events[i].persons;
-    events[i].commission.privateaser = commission - commission*0.5 - events[i].persons;
+    events[i].commission.privateaser = commission - commission*0.5 - events[i].persons + deductible;
   }
 }
 
